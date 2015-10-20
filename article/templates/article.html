@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% block article %}
+<h4>{{ article.article_date }}</h4>
+<h2>{{ article.article_title }}</h2>
+<p>{{ article.article_text }}</p>
+<hr>
+<div class="large-offset-1 large-8 columns"
+<p>Comments:</p>
+
+{% for comment in comments %}
+    <p>{{ comment.comments_text }}</p>
+{% endfor %}
+
+    <div class="row">
+        <div class="large-3 large-offset-5 columns">
+            <ul class="pagination">
+                {% if comments.has_previous %}
+                    <li class="arrow"><a href="/articles/get/{{ article.id }}/{{ comments.previous_page_number }}/">&laquo;</a> </li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
+                {% endif %}
+                {% for page in comments.paginator.page_range %}
+                    {% if page == comments.number %}
+                        <li class="current"><a href="/articles/get/{{ article.id }}/{{ page }}/">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="/articles/get/{{ article.id }}/{{ page }}/">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if comments.has_next %}
+                    <li class="arrow"><a href="/articles/get/{{ article.id }}/{{ comments.next_page_number }}/">&raquo;</a> </li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <form action="http://127.0.0.1:8000/articles/addcomment/{{ article.id }}/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" class="button" value="Add Comment">
+    </form>
+</div>
+{% endblock %}
